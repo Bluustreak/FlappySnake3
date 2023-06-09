@@ -3,6 +3,7 @@ import Player
 import random as rnd 
 import Obsticle
 import sys
+import numpy as np
 
 
 # Initialize Pygame
@@ -39,7 +40,7 @@ def drawObsticles(screen):
 def generateObsticle():
     global score
     x = screen_width
-    y=rnd.random()*screen_height-100
+    y=np.abs(rnd.random()*screen_height-100)
     speed = (10 + rnd.random())
     obsticles.append(Obsticle.Obsticle(x,y,speed+score/1000))
 
