@@ -1,34 +1,9 @@
 import pygame
 import Player
-import random as rnd
+import random as rnd 
 import Obsticle
 import sys
 
-def eventListener():
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            pygame.quit()
-            sys.exit()
-        elif event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_SPACE:
-                player.jump()
-
-def drawObsticles(screen):
-    for o in obsticles:
-        o.draw(screen)
-
-def generateObsticle():
-    x = screen_width
-    y=rnd.random()*screen_height
-    speed = (5 + rnd.random()*10)
-    obsticles.append(Obsticle.Obsticle(x,y,speed))
-
-def updateObsticles():
-    for o in obsticles:
-        o.update()
-        #this can be inserted into the drawObsticels to avoid a second loop
-        if o.x < 0:
-            obsticles.remove(o)
 
 # Initialize Pygame
 pygame.init()
@@ -39,14 +14,50 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 clock = pygame.time.Clock()
 
 # Set up the things
-player = Player.Player(screen_width // 5, screen_height // 2)
+player = Player.Player(100, 250)
 obsticles = []
 score = 0
+passedObsticles = 0
 
 
+def eventListener():
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()   
+        elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_SPACE:
+                player.jump()
+    if player.has_collided(obsticles, screen_height):
+        return False
+            
+
+def drawObsticles(screen):
+    for o in obsticles:
+        o.draw(screen)
+
+def generateObsticle():
+    x = screen_width
+    y=rnd.random()*screen_height
+    speed = (2 + rnd.random()*10)
+    obsticles.append(Obsticle.Obsticle(x,y,speed))
+
+def updateObsticles():
+    for o in obsticles:
+        o.update()
+        #this can be inserted into the drawObsticels to avoid a second loop
+        if o.x < 0:
+            obsticles.remove(o)
+            passedObsticles +=1
+        
+
+
+
+run = True
 # Main game loop
 while True:
-    eventListener()
+    if eventListener() == False:
+        break
 
     #make the things
     if rnd.random()>0.97:
@@ -59,10 +70,24 @@ while True:
     player.draw(screen)
     drawObsticles(screen)
 
-    #update the things
+    #update the things 
     player.update()
-    updateObsticles()
+    #updateObsticles()
+    for o in obsticles:
+        o.update()
+        #this can be inserted into the drawObsticels to avoid a second loop
+        if o.x < 0:
+            obsticles.remove(o)
+            passedObsticles +=1
 
     # Update the screen
     pygame.display.flip()
     clock.tick(60)
+    score = score +1
+    pygame.display.set_caption("score: " + str(score+passedObsticles*100))
+
+while True:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            pygame.quit()
+            sys.exit()   
