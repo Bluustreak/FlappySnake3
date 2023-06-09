@@ -25,13 +25,15 @@ class Player(pygame.sprite.Sprite):
         #pygame.draw.rect(screen, (0, 0, 0), (self.x, self.y, self.size, self.size))
         screen.blit(self.image, (self.x, self.y))
 
-    def has_collided(self, List_of_obsticles, screen_height):
-        result = False                
-        if self.y <=0:
-            self.y=0
-        elif self.y+self.size[1] > screen_height:
-            self.y = screen_height-self.size[1]
+    def has_collided(self, List_of_obsticles):
+        result = False  
         for o in List_of_obsticles:
             if self.x + self.size[0] > o.x and self.x < o.x+o.size[0] and self.y + self.size[1] > o.y and self.y < o.y+o.size[1]:
                 return True
         return result
+    
+    def restrictVertical(self, screen_height):
+        if self.y <=0:
+            self.y=0
+        elif self.y+self.size[1] > screen_height:
+            self.y = screen_height-self.size[1]
