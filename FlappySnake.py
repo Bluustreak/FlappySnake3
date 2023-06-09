@@ -28,7 +28,7 @@ def eventListener():
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
                 player.jump()
-    if player.has_collided(obsticles, screen_height):
+    if player.has_collided(obsticles):
         return False
             
 
@@ -37,31 +37,42 @@ def drawObsticles(screen):
         o.draw(screen)
 
 def generateObsticle():
+    global score
     x = screen_width
     y=rnd.random()*screen_height
-    speed = (2 + rnd.random()*10)
-    obsticles.append(Obsticle.Obsticle(x,y,speed))
+    speed = (10 + rnd.random())
+    obsticles.append(Obsticle.Obsticle(x,y,speed+score/1000))
 
 def updateObsticles():
+    global passedObsticles
     for o in obsticles:
         o.update()
         #this can be inserted into the drawObsticels to avoid a second loop
-        if o.x < 0:
+        if o.x < -o.size[0]:
             obsticles.remove(o)
             passedObsticles +=1
-        
 
 
+frameCounter = 0
 
-run = True
+
 # Main game loop
 while True:
     if eventListener() == False:
         break
 
     #make the things
-    if rnd.random()>0.97:
+    if frameCounter >3600-rnd.random()*100 - score:
+        frameCounter = 0
         generateObsticle()
+
+
+
+
+    #update the things 
+    player.update()
+    updateObsticles()
+    player.restrictVertical(screen_height)
 
     # Clear the screen
     screen.fill((70, 70, 70))
@@ -70,21 +81,14 @@ while True:
     player.draw(screen)
     drawObsticles(screen)
 
-    #update the things 
-    player.update()
-    #updateObsticles()
-    for o in obsticles:
-        o.update()
-        #this can be inserted into the drawObsticels to avoid a second loop
-        if o.x < 0:
-            obsticles.remove(o)
-            passedObsticles +=1
+    score = score +1
+    pygame.display.set_caption("score: " + str(score+passedObsticles*100))
+    frameCounter += clock.get_fps()
 
     # Update the screen
     pygame.display.flip()
     clock.tick(60)
-    score = score +1
-    pygame.display.set_caption("score: " + str(score+passedObsticles*100))
+
 
 while True:
     for event in pygame.event.get():
