@@ -42,8 +42,8 @@ def generateObsticle():
     global score
     x = screen_width
     y=np.abs(rnd.random()*screen_height-100)
-    speed = (10 + rnd.random()*score/100)
-    obsticles.append(Obsticle.Obsticle(x,y,speed+score/1000))
+    speed = (10 + rnd.random()*score/500)
+    obsticles.append(Obsticle.Obsticle(x,y,speed))
 
 def updateObsticles():
     global passedObsticles
@@ -61,7 +61,8 @@ while True:
         break
 
     #make the things
-    if time.time()-time1 > 1:
+    #generate an obsticle with a 3% chance if 0.3seconds has passed
+    if time.time()-time1 > 0.3 and rnd.random() >0.97:
         time1 = time.time()
         generateObsticle()
 

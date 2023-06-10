@@ -6,7 +6,7 @@ class Player(pygame.sprite.Sprite):
         super().__init__
         imgPath = "images/PlayerSprite.png"
         self.image = pygame.image.load(os.path.normpath(imgPath)).convert_alpha()
-        self.image = pygame.transform.scale(self.image, (100, 100))
+        self.image = pygame.transform.scale(self.image, (70, 70))
         self.size = self.image.get_size()
         self.x = x
         self.y = y
