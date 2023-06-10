@@ -1,0 +1,19 @@
+    
+    # Update the things
+    player.update()
+    if rnd.random() > 0.97:
+        obsticles.append(Obsticle(screen_width, rnd.random()*screen_height, 5 + (score/1000) * (rnd.random()*10)))
+    for o in obsticles:
+        o.update()
+        if o.x <0:
+            obsticles.remove(o)
+    score = int(score + (clock.get_fps()/60))
+    pygame.display.set_caption("SCORE: " + str(score ))
+
+    # Clear the screen
+    screen.fill((70, 70, 70))
+
+    # Draw the things
+    player.draw(screen)
+    for o in obsticles:
+        o.draw(screen)

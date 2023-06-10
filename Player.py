@@ -3,7 +3,7 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__
-        self.image = pygame.image.load("images\PlayerSprite.png")
+        self.image = pygame.image.load("images\PlayerSprite.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.size = self.image.get_size()
         self.x = x
@@ -22,8 +22,8 @@ class Player(pygame.sprite.Sprite):
         return self.y > screen_height or self.y < 0
 
     def draw(self, screen):
-        #pygame.draw.rect(screen, (0, 0, 0), (self.x, self.y, self.size, self.size))
         screen.blit(self.image, (self.x, self.y))
+        #pygame.draw.rect(screen, (0,0,0), (self.x, self.y, self.size[0], self.size[1]))
 
     def has_collided(self, List_of_obsticles):
         result = False  

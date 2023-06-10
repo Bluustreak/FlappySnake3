@@ -4,6 +4,7 @@ import random as rnd
 import Obsticle
 import sys
 import numpy as np
+import time
 
 
 # Initialize Pygame
@@ -11,7 +12,7 @@ pygame.init()
 
 # Set up the screen
 screen_width, screen_height = 1200, 600
-screen = pygame.display.set_mode((screen_width, screen_height))
+screen = pygame.display.set_mode((screen_width, screen_height), vsync=1)
 clock = pygame.time.Clock()
 
 # Set up the things
@@ -19,7 +20,7 @@ player = Player.Player(100, 250)
 obsticles = []
 score = 0
 passedObsticles = 0
-
+frameCounter = 0
 
 def eventListener():
     for event in pygame.event.get():
@@ -41,7 +42,7 @@ def generateObsticle():
     global score
     x = screen_width
     y=np.abs(rnd.random()*screen_height-100)
-    speed = (10 + rnd.random())
+    speed = (10 + rnd.random()*score/100)
     obsticles.append(Obsticle.Obsticle(x,y,speed+score/1000))
 
 def updateObsticles():
@@ -53,22 +54,17 @@ def updateObsticles():
             obsticles.remove(o)
             passedObsticles +=1
 
-
-frameCounter = 0
-
-
+time1 = time.time()
 # Main game loop
 while True:
+    t1 = time.perf_counter()
     if eventListener() == False:
         break
 
     #make the things
-    if frameCounter >3600-rnd.random()*100 - score:
-        frameCounter = 0
+    if time.time()-time1 > 1:
+        time1 = time.time()
         generateObsticle()
-
-
-
 
     #update the things 
     player.update()
@@ -77,19 +73,24 @@ while True:
 
     # Clear the screen
     screen.fill((70, 70, 70))
+    
 
     #draw the things
     player.draw(screen)
     drawObsticles(screen)
 
     score = score +1
-    pygame.display.set_caption("score: " + str(score+passedObsticles*100))
-    frameCounter += clock.get_fps()
+    #pygame.display.set_caption("score: " + str(score+passedObsticles*100))
+    
+    
 
     # Update the screen
     pygame.display.flip()
-    clock.tick(60)
-
+    t2 = time.perf_counter()
+    dt = t2-t1
+    frametime=1000/59.93
+    delay=frametime-dt
+    time.sleep((delay/1e3))
 
 while True:
     for event in pygame.event.get():
