@@ -85,17 +85,17 @@ while True:
     #limits the game to 60 FPS, regardless of screen refreshrate 
     clock.tick(60)
     
-    score = TimeSurvived+passedObsticles
+    score = TimeSurvived+passedObsticles*100
 
     #the below updates the score once a second, but never stops calulating it, 
     # because updating the text takes too much calculation that it causes lag if done every frame
     
     if time.time()-time1 >1:
-        pygame.display.set_caption("score: " + str(score*100))
+        pygame.display.set_caption("score: " + str(score))
         time1 = 0
 
 #the actual total score is displayed in full after the game has ended
-pygame.display.set_caption("score: " + str(score*100))
+pygame.display.set_caption("score: " + str(score))
 
 # this runs a game loop after the game has ended, essentially a pause function, 
 # at 10FPS to decrease the cpu demand
