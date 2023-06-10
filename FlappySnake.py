@@ -57,12 +57,13 @@ def updateObsticles():
 time1 = time.time()
 # Main game loop
 while True:
+    frameCounter += 1
     if eventListener() == False:
         break
 
     #make the things
-    #generate an obsticle with a 3% chance if 0.3seconds has passed
-    if time.time()-time1 > 0.3 and rnd.random() >0.97:
+    #generate an obsticle with a 2% chance if 0.3seconds has passed
+    if rnd.random() >0.98:
         time1 = time.time()
         generateObsticle()
 
@@ -87,13 +88,11 @@ while True:
     clock.tick(60)
     
     score = TimeSurvived+passedObsticles*100
-
-    #the below updates the score once a second, but never stops calulating it, 
+    #the below updates the score every now and then, but never stops calulating it, 
     # because updating the text takes too much calculation that it causes lag if done every frame
-    
-    if time.time()-time1 >0.3:
+    if frameCounter >10:
         pygame.display.set_caption("score: " + str(score))
-        time1 = 0
+        frameCounter = 0
 
 #the actual total score is displayed in full after the game has ended
 pygame.display.set_caption("score: " + str(score))
