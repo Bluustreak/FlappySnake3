@@ -3,7 +3,7 @@ import pygame
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__
-        self.image = pygame.image.load("images\PlayerSprite.png").convert_alpha()
+        self.image = pygame.image.load("images/PlayerSprite.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.size = self.image.get_size()
         self.x = x
@@ -32,8 +32,17 @@ class Player(pygame.sprite.Sprite):
                 return True
         return result
     
-    def restrictVertical(self, screen_height):
-        if self.y <=0:
-            self.y=0
-        elif self.y+self.size[1] > screen_height:
-            self.y = screen_height-self.size[1]
+    def restrictVertical(self, screen_height, OuterBoundsBehavior):
+        result = True
+        if OuterBoundsBehavior == "limit":
+            if self.y <=0:
+                self.y=0
+            elif self.y+self.size[1] > screen_height:
+                self.y = screen_height-self.size[1]
+        elif OuterBoundsBehavior == "kill":
+            halfsize = self.size[1]/2
+            if self.y <= -halfsize:
+                result = False
+            elif self.y + halfsize > screen_height:
+                result = False
+        return result

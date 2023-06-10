@@ -16,11 +16,12 @@ screen = pygame.display.set_mode((screen_width, screen_height), vsync=1)
 clock = pygame.time.Clock()
 
 # Set up the things
-player = Player.Player(100, 250)
+player = Player.Player(100, 50)
 obsticles = []
-score = 0
+TimeSurvived = 0
 passedObsticles = 0
 frameCounter = 0
+score = 0
 
 def eventListener():
     for event in pygame.event.get():
@@ -33,7 +34,6 @@ def eventListener():
     if player.has_collided(obsticles):
         return False
             
-
 def drawObsticles(screen):
     for o in obsticles:
         o.draw(screen)
@@ -57,7 +57,6 @@ def updateObsticles():
 time1 = time.time()
 # Main game loop
 while True:
-    t1 = time.perf_counter()
     if eventListener() == False:
         break
 
@@ -67,33 +66,42 @@ while True:
         generateObsticle()
 
     #update the things 
+    TimeSurvived += 1
     player.update()
     updateObsticles()
-    player.restrictVertical(screen_height)
-
+    if player.restrictVertical(screen_height, OuterBoundsBehavior="kill") == False:
+        break
+  
     # Clear the screen
-    screen.fill((70, 70, 70))
-    
+    screen.fill((70, 70, 70))    
 
     #draw the things
     player.draw(screen)
     drawObsticles(screen)
 
-    score = score +1
-    #pygame.display.set_caption("score: " + str(score+passedObsticles*100))
-    
-    
-
     # Update the screen
     pygame.display.flip()
-    t2 = time.perf_counter()
-    dt = t2-t1
-    frametime=1000/59.93
-    delay=frametime-dt
-    time.sleep((delay/1e3))
 
+    #limits the game to 60 FPS, regardless of screen refreshrate 
+    clock.tick(60)
+    
+    score = TimeSurvived+passedObsticles
+
+    #the below updates the score once a second, but never stops calulating it, 
+    # because updating the text takes too much calculation that it causes lag if done every frame
+    
+    if time.time()-time1 >1:
+        pygame.display.set_caption("score: " + str(score*100))
+        time1 = 0
+
+#the actual total score is displayed in full after the game has ended
+pygame.display.set_caption("score: " + str(score*100))
+
+# this runs a game loop after the game has ended, essentially a pause function, 
+# at 10FPS to decrease the cpu demand
 while True:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             pygame.quit()
-            sys.exit()   
+            sys.exit()  
+    clock.tick(10)

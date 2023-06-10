@@ -3,7 +3,7 @@ import numpy as np
 class Obsticle: 
     def __init__(self, x, y, speed):
         super().__init__
-        self.image = pygame.image.load("images\Obsticle-1-Sprite.png").convert_alpha()
+        self.image = pygame.image.load("images/Obsticle-1-Sprite.png").convert_alpha()
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.size = self.image.get_size()
         self.x = x
