@@ -1,9 +1,11 @@
 import pygame 
+import os
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, x, y):
         super().__init__
-        self.image = pygame.image.load("images/PlayerSprite.png").convert_alpha()
+        imgPath = "images/PlayerSprite.png"
+        self.image = pygame.image.load(os.path.normpath(imgPath)).convert_alpha()
         self.image = pygame.transform.scale(self.image, (100, 100))
         self.size = self.image.get_size()
         self.x = x
