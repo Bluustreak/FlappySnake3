@@ -62,7 +62,7 @@ while True:
         break
 
     #make the things
-    #generate an obsticle with a 2% chance if 0.3seconds has passed
+    #generate an obsticle with a 2% chance
     if rnd.random() >0.98:
         time1 = time.time()
         generateObsticle()
