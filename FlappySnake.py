@@ -91,7 +91,7 @@ while True:
     #the below updates the score once a second, but never stops calulating it, 
     # because updating the text takes too much calculation that it causes lag if done every frame
     
-    if time.time()-time1 >1:
+    if time.time()-time1 >0.3:
         pygame.display.set_caption("score: " + str(score))
         time1 = 0
 
